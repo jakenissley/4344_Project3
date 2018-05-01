@@ -4,7 +4,7 @@
 import sys  # Library for INT_MAX
  
 class Graph():
-    MAX_INT = 100000;
+    MAX_INT = sys.maxsize;
  
     def __init__(self, vertices):
         self.V = vertices
