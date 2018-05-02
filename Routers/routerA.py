@@ -1,66 +1,54 @@
-# A Python program for Prim's Minimum Spanning Tree (MST) algorithm.
-# The program is for adjacency matrix representation of the graph
- 
-import sys  # Library for INT_MAX
- 
-class Graph():
-    MAX_INT = sys.maxsize;
- 
-    def __init__(self, vertices):
-        self.V = vertices
-        self.graph = [[0 for column in range(vertices)] 
-                      for row in range(vertices)]
- 
-    # A utility function to print the constructed MST stored in parent[]
-    def printMST(self, parent):
-        print("Edge \tWeight")
-        for i in range(1,self.V):
-            print(parent[i],"-",i,"\t",self.graph[i][ parent[i] ])
- 
-    # A utility function to find the vertex with minimum distance value, from
-    # the set of vertices not yet included in shortest path tree
-    def minKey(self, key, mstSet):
- 
-        # Initilaize min value
-        min = self.MAX_INT
- 
-        for v in range(self.V):
-            if key[v] < min and mstSet[v] == False:
-                min = key[v]
-                min_index = v
- 
-        return min_index
- 
-    # Function to construct and print MST for a graph represented using
-    # adjacency matrix representation
-    def primMST(self):
- 
-        #Key values used to pick minimum weight edge in cut
-        key = [self.MAX_INT] * self.V
-        parent = [None] * self.V # Array to store constructed MST
-        key[0] = 0   # Make key 0 so that this vertex is picked as first vertex
-        mstSet = [False] * self.V
- 
-        parent[0] = -1  # First node is always the root of
- 
-        for cout in range(self.V):
- 
-            # Pick the minimum distance vertex from the set of vertices not
-            # yet processed. u is always equal to src in first iteration
-            u = self.minKey(key, mstSet)
- 
-            # Put the minimum distance vertex in the shortest path tree
-            mstSet[u] = True
- 
-            # Update dist value of the adjacent vertices of the picked vertex
-            # only if the current distance is greater than new distance and
-            # the vertex in not in the shotest path tree
-            for v in range(self.V):
-                # graph[u][v] is non zero only for adjacent vertices of m
-                # mstSet[v] is false for vertices not yet included in MST
-                # Update the key only if graph[u][v] is smaller than key[v]
-                if self.graph[u][v] > 0 and mstSet[v] == False and key[v] > self.graph[u][v]:
-                        key[v] = self.graph[u][v]
-                        parent[v] = u
- 
-        self.printMST(parent)
+from collections import defaultdict
+from heapq import *
+
+def dijkstra(edges, f, t):
+    g = defaultdict(list)
+    for l,r,c in edges:
+        g[l].append((c,r))
+
+    q, seen = [(0,f,())], set()
+    while q:
+        (cost,v1,path) = heappop(q)
+        if v1 not in seen:
+            seen.add(v1)
+            path = (v1, path)
+            if v1 == t: return (cost, path)
+
+            for c, v2 in g.get(v1, ()):
+                if v2 not in seen:
+                    heappush(q, (cost+c, v2, path))
+
+    return float("inf")
+
+if __name__ == "__main__":
+    edges = [
+        ("A", "B", 4),
+        ("A", "C", 3),
+        ("A", "E", 7),
+        ("B", "A", 4),
+        ("B", "C", 6),
+        ("B", "L", 5),
+        ("C", "A", 3),
+        ("C", "B", 6),
+        ("C", "D", 11),
+        ("D", "C", 11),
+        ("D", "F", 6),
+        ("D", "L", 9),
+        ("D", "G", 10),
+        ("E", "A", 7),
+        ("E", "G", 5),
+        ("F", "D", 6),
+        ("F", "L", 5),
+        ("G", "E", 5),
+        ("G", "D", 10),
+        ("L", "B", 5),
+        ("L", "D", 9),
+        ("L", "F", 5)
+    ]
+
+    print("=== Dijkstra ===")
+    print(edges)
+    print("A -> F:")
+    print(dijkstra(edges, "A", "F"))
+    print("A -> E:")
+    print(dijkstra(edges, "A", "E"))
