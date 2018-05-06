@@ -47,7 +47,6 @@ EDGES = [
     ]
 
 def print_paths(source):
-
     router_array = ["A", "B", "C", "D", "E", "F", "G", "L"]
     print("Source: {}".format(source))
     print("Destination\tDistance & Shortest Path\n")

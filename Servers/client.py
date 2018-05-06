@@ -1,47 +1,31 @@
-# Name: Kartik Gupta
-# ID:   1001228675
-
-# importing socket, sys and time libraries
 import socket
-import sys
-import time
 
-# creating client socket
+# Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# taking in the parameters from the command line and assigning them to variables
-host = sys.argv[1]
-port = sys.argv[2]
-filename = sys.argv[3]
+# Connect the socket to the port where the server is listening
+port = 8090
+server_address = ('localhost', port)
+print("Connecton to localhost:{}".format(port))
+sock.connect(server_address)
 
-# connecting the socket to the entered host and port and printing the success message to the client
-sock.connect((host, int(port)))
-print("Connection Accepted!")
+try:
 
-# making a GET HTTP request from the provided information
-message = "GET /"+filename+" HTTP/1.1"
+    # Send data
+    message = 'This is the message.  It will be repeated.'
+    bytes_message = bytes(message, "utf-8")
+    print("Sending message: {}".format(message))
+    sock.sendall(bytes_message)
 
-# storing the start time
-start_time = time.time()
+    # Look for the response
+    amount_received = 0
+    amount_expected = len(message)
 
-# sending the GET request to the server
-sock.send(message.encode())
+    while amount_received < amount_expected:
+        data = sock.recv(30)
+        amount_received += len(data)
+        print("Received: {}".format(data))
 
-# receiving the file from the server and printing it out to the client
-file = sock.recv(1024)
-print(file.decode())
-
-# printing important information about the connection to the client
-print("Client IP Address : ", sock.getpeername()[0])
-print("Client Port no. : ", sock.getpeername()[1])
-print("Client Host name: localhost")
-print("Peer name : ", sock.getpeername())
-print("Socket Family : ", sock.family)
-print("Type : ", sock.type)
-print("Protocol: ", socket.getservbyport(int(port)))
-
-# printing the total time for the file and data to be retrieved from the server
-print("RTT: "+str(time.time() - start_time)+" seconds")
-
-# closing the client socket to the server once all the tasks are performed
-sock.close()
+finally:
+    print("Closing socket.")
+    sock.close()
