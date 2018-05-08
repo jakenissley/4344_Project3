@@ -1,6 +1,14 @@
 from collections import defaultdict
 from heapq import *
 
+# Reads each line of file and stores in a list called "content"
+def read_file(filename):
+    with open(filename) as file:
+        content = file.readlines()
+    
+    content = [line.strip() for line in content] # Strips \n from each line
+    return content
+
 def dijkstra(edges, f, t):
     g = defaultdict(list)
     for l,r,c in edges:

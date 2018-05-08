@@ -1,8 +1,11 @@
-from router_main import dijkstra, print_paths
+from router_main import dijkstra, print_paths, read_file
 import socket
 
 print_paths("A")
 print("\n")
+
+# Read Ann-Chan file
+#file_content = read_file("../Text Files/Supplemental Text Files/Ann/Ann-_Chan.txt")
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -21,15 +24,21 @@ while True:
     print("Waiting for connection...")
     connection, client_address = sock.accept()
 
+    # Maybe change value of "connection" to change what router to send to?
+
     try:
         print("Connection from: {}".format(client_address))
+        line_received = -1
         # Receive the data in small chunks and retransmit it
         while True:
-            data = connection.recv(30)
+            data = connection.recv(1024)
             print("Received: {}".format(data))
             if data:
-                print("Sending data back to client...")
-                connection.sendall(data)
+                line_received = line_received + 1
+                line_received_string = str(line_received)
+                print("Sending acknowledgement back to client...")
+                bytes_line = bytes(str(line_received_string), "utf-8")
+                connection.sendall(bytes_line)
             else:
                 print("No more data from: {}".format(client_address))
                 break
