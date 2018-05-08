@@ -31,9 +31,10 @@ try:
         bytes_message = bytes(message, "utf-8")
         print("Sending message: {}".format(message))
         sock.sendall(bytes_message)
-        
+
         data = sock.recv(30)
-        print("routerA received line: {}".format(data))
+        string_data = str(data, "utf-8")
+        print("routerA received line: {}\n".format(string_data))
     # Look for the response
     # amount_received = 0
     # amount_expected = len(message)

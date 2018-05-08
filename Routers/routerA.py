@@ -28,15 +28,18 @@ while True:
 
     try:
         print("Connection from: {}".format(client_address))
-        line_received = -1
+        line_received = 0
         # Receive the data in small chunks and retransmit it
         while True:
             data = connection.recv(1024)
-            print("Received: {}".format(data))
             if data:
+                string_data = str(data, "utf-8")
+                print("Received: {}".format(string_data))
+
                 line_received = line_received + 1
                 line_received_string = str(line_received)
-                print("Sending acknowledgement back to client...")
+                
+                print("Received line {}. Sending acknowledgement back to client...\n".format(line_received))
                 bytes_line = bytes(str(line_received_string), "utf-8")
                 connection.sendall(bytes_line)
             else:
