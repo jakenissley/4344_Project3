@@ -1,6 +1,8 @@
 from collections import defaultdict
 from heapq import *
+import json
 
+ROUTER_DICT = {"A": 10000, "B": 10001, "C": 10002, "D": 10003, "E": 10004, "F": 10005, "G": 10006, "L": 10007, "Ann": 10010, "Chan": 10011, "Jan": 10012}
 # Reads each line of file and stores in a list called "content"
 def read_file(filename):
     with open(filename) as file:
